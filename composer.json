@@ -1,0 +1,19 @@
+{
+    "name": "Change Calculator",
+    "description": "Simple change calculator helper.",
+    "authors": [
+        {
+            "name": "Omar Martinez",
+            "email": "omarmd1986@outlook.com"
+        }
+    ],
+    "require": {
+
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.5.*"
+    },
+    "autoload": {
+        "classmap": ["src/"]
+    }
+}

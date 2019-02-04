@@ -1,0 +1,14 @@
+#!/usr/bin/env php
+<?php
+// application.php
+
+require_once './vendor/autoload.php';
+
+use ChangeCalculator\Commands\Run;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+
+$application->add(new Run());
+
+$application->run();

@@ -1,28 +1,74 @@
 <?php
+namespace ChangeCalculator;
 
-class Calculator {
+use ChangeCalculator\Exceptions\ChangeCalculatorException;
 
-    public function plus($a, $b) {
-        return $a + $b;
-    }
+class Calculator
+{
 
-    public function minus($a, $b) {
-        return $a - $b;
-    }
-
-    public function multiply($a, $b) {
-        return $a * $b;
-    }
-
-    public function divide($a, $b) {
-        if ($b == 0) {
-            throw new InvalidArgumentException('Cannot divide by zero');
+    /**
+     * 
+     * @param float $totalCost
+     * @param float $amountProvided
+     * @throws ChangeCalculatorException
+     */
+    public function change(float $totalCost, float $amountProvided): Change
+    {
+        if ($amountProvided < $totalCost) {
+            throw new ChangeCalculatorException('The amount provided is less that total cost');
         }
-        return $a / $b;
+
+        $result = $this->calculateChange($amountProvided - $totalCost);
+
+        if (false === $result) {
+            throw new ChangeCalculatorException('Impossible make a change with the current denominations');
+        }
+
+        return new Change($result);
     }
 
-    public function modulo($a, $b) {
-        return $a % $b;
-    }
+    /**
+     * 
+     * @param float $change
+     * @param int $index
+     * @return boolean|array
+     */
+    private function calculateChange(float $change, int $index = 0)
+    {
+        $result = [];
 
+        if ($change === 0.0) {
+            return $result;
+        }
+        if ($change < 0.0) {
+            return false;
+        }
+        
+        $denominations = Denominations::get();
+        
+        for ($i = $index; $i < count($denominations); $i++) {
+            $denomination = $denominations[$i];
+            $tmp = [];
+
+            if ($change < $denomination) {
+                $tmp[] = new Denomination($denomination);
+
+                $sub = $this->calculateChange($change, $i + 1);
+            } else {
+                $tmp[] = new Denomination($denomination, (int) ($change / $denomination));
+
+                $remain = \bcsub($change, \bcmul(end($tmp)->quantity, $denomination, 2), 2);
+
+                $sub = $this->calculateChange($remain, $i + 1);
+            }
+
+            if (false !== $sub) { // found a valid solution.
+                $result = array_merge($result, $tmp, $sub);
+                break;
+            }
+            // backtracking. try different path
+        }
+
+        return count($result) > 0 ? $result : false;
+    }
 }

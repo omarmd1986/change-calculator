@@ -5,10 +5,12 @@
 require_once './vendor/autoload.php';
 
 use ChangeCalculator\Commands\Run;
+use ChangeCalculator\Commands\Example1;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
 
 $application->add(new Run());
+$application->add(new Example1());
 
 $application->run();

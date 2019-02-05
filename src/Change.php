@@ -4,10 +4,12 @@ namespace ChangeCalculator;
 class Change
 {
 
-    public $data;
+    public $change;
+    public $bill;
 
-    public function __construct(iterable $data)
+    public function __construct(float $change, iterable $data)
     {
-        $this->data = $data;
+        $this->change = $change;
+        $this->bill = $data;
     }
 }

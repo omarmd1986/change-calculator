@@ -17,14 +17,16 @@ class Calculator
         if ($amountProvided < $totalCost) {
             throw new ChangeCalculatorException('The amount provided is less that total cost');
         }
-
-        $result = $this->calculateChange($amountProvided - $totalCost);
+        
+        $change = $amountProvided - $totalCost;
+        
+        $result = $this->calculateChange($change);
 
         if (false === $result) {
             throw new ChangeCalculatorException('Impossible make a change with the current denominations');
         }
 
-        return new Change($result);
+        return new Change($change, $result);
     }
 
     /**

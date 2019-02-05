@@ -35,7 +35,6 @@ class Run extends Command
         
         $change = $calculator->change($totalCost, $amountProvided);
         
-        
-        
+        var_dump($change);        
     }
 }
